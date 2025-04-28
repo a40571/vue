@@ -20,7 +20,6 @@
               rows="2"
           ></textarea>
                 </div>
-
                 <div v-else class="todo-content">
                     <span :class="{ completed: todo.completed }">{{ todo.text }}</span>
                 </div>
@@ -47,7 +46,6 @@
                     />
                     <span>{{ todo.progress }}%</span>
                 </div>
-
                 <!-- Nút hành động -->
                 <div class="actions">
                     <button v-if="editIndex !== index" @click="startEdit(index)">✏️</button>
@@ -55,23 +53,19 @@
                 </div>
             </li>
         </ul>
-
         <!-- Hiển thị phần trăm công việc hoàn thành -->
         <div v-if="todos.length > 0">
             <p>Hoàn thành tổng thể: {{ completedPercentage }}%</p>
         </div>
     </div>
 </template>
-
 <script setup>
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
-
 const newTodo = ref('')
 const todos = ref([])
 const editIndex = ref(null)
 const editText = ref('')
 const todoInput = ref(null) // Chỉ khai báo một lần duy nhất!
-
 onMounted(() => {
     const saved = localStorage.getItem('todos')
     if (saved) {
@@ -82,7 +76,6 @@ onMounted(() => {
         }))
     }
 })
-
 watch(
     todos,
     (newTodos) => {
@@ -93,7 +86,7 @@ watch(
 
 const addTodo = () => {
     if (newTodo.value.trim()) {
-        todos.value.push({
+        todos.value.unshift({
             text: newTodo.value.trim(),
             completed: false,
             progress: 0,
@@ -102,18 +95,15 @@ const addTodo = () => {
         newTodo.value = ''
     }
 }
-
 const removeTodo = (index) => {
     if (confirm('Bạn có chắc muốn xoá công việc này không?')) {
         todos.value.splice(index, 1)
     }
 }
-
 const startEdit = (index) => {
     editIndex.value = index
     editText.value = todos.value[index].text
 }
-
 const saveEdit = (index) => {
     const newText = editText.value.trim()
     if (newText) {
@@ -122,18 +112,15 @@ const saveEdit = (index) => {
     editIndex.value = null
     editText.value = ''
 }
-
 const cancelEdit = () => {
     editIndex.value = null
     editText.value = ''
 }
-
 const completedPercentage = computed(() => {
     if (todos.value.length === 0) return 0
     const totalProgress = todos.value.reduce((sum, todo) => sum + Number(todo.progress || 0), 0)
     return Math.round(totalProgress / todos.value.length)
 })
-
 const handleProgressChange = (todo) => {
     if (todo.progress === '100' && !todo.completed && todo.showNotification) {
         todo.completed = true
@@ -141,7 +128,6 @@ const handleProgressChange = (todo) => {
     } else if (todo.progress < 100 && todo.completed) {
         todo.completed = false
     }
-
     const allCompleted = todos.value.length > 0 && todos.value.every(t => t.completed)
     if (allCompleted) {
         if (confirm('✅ Bạn đã hoàn thành tất cả công việc! Bạn có muốn thêm công việc mới không?')) {
@@ -152,8 +138,6 @@ const handleProgressChange = (todo) => {
     }
 }
 </script>
-
-
 <style scoped>
 input[type='text'] {
     padding: 8px;
@@ -162,12 +146,10 @@ input[type='text'] {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-
 ul {
     list-style: none;
     padding: 0;
 }
-
 .todo-item {
     display: flex;
     flex-direction: column;
@@ -178,7 +160,6 @@ ul {
     border-radius: 5px;
     background-color: #fff;
 }
-
 .todo-content {
     flex: 1;
     overflow: hidden;
@@ -187,13 +168,11 @@ ul {
     line-height: 1.4;
     max-width: 100%;
 }
-
 .todo-content.full {
     white-space: normal;
     overflow: visible;
     padding: 0;
 }
-
 textarea.edit-textarea {
     width: 100%;
     font-size: 1rem;
@@ -202,12 +181,10 @@ textarea.edit-textarea {
     border-radius: 4px;
     border: 1px solid #ccc;
 }
-
 .actions {
     display: flex;
     gap: 8px;
 }
-
 button {
     background-color: #ff5252;
     color: white;
@@ -218,23 +195,19 @@ button {
     font-size: 14px;
     transition: background-color 0.3s ease;
 }
-
 button:hover {
     background-color: #e04848;
 }
-
 .completed {
     text-decoration: line-through;
     color: gray;
     word-break: break-word;
 }
-
 .progress-container {
     display: flex;
     align-items: center;
     gap: 8px;
 }
-
 .progress-slider {
     width: 150px;
     height: 6px;
@@ -243,7 +216,6 @@ button:hover {
     -webkit-appearance: none;
     appearance: none;
 }
-
 .progress-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -253,7 +225,6 @@ button:hover {
     background-color: #4caf50;
     cursor: pointer;
 }
-
 .progress-slider::-moz-range-thumb {
     width: 16px;
     height: 16px;
